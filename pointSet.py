@@ -167,7 +167,7 @@ class PointSet:
   def printDetails(self): # change to printDetails() and add more info
     print("Duplicate points:\t" + str(self.duplicatePoints))
     print("Timestamp errors:\t" + str(self.timestampErrors))
-    print("Outliers:\t\t\t"     + str(self.outlierCount))
+    print("Outliers:\t\t"       + str(self.outlierCount))
     print("\nCurrent count:\t"  + str(self.getLength()) + "/227")
     print("Erroneous points filtered: " + str(227-(self.getLength())))
 
