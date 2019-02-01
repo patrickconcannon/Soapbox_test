@@ -54,12 +54,12 @@ class PointSet:
           self.pointSet.append(Point(float(row[0]),float(row[1]),float(row[2])))
 
 
-  def getLength(self):
+  def _getLength(self):
         return len(self.pointSet)
 
 
   # Returns distance between two points
-  def getDistance(self, p1,p2):
+  def _getDistance(self, p1,p2):
     # Convert to radians
     lat1 = radians(p1.lt)
     lon1 = radians(p1.ln)
@@ -75,7 +75,7 @@ class PointSet:
 
 
   # Gets Median Absolute Deviation(MAD)
-  def getMAD(self):
+  def _getMAD(self):
     med_dist = []
     med = median(self.distances) # median
     for d in self.distances:
@@ -85,15 +85,15 @@ class PointSet:
 
 
   # Calculates and stores distances between points
-  def setDistances(self):  
-    if self.getLength() == 0:
+  def _setDistances(self):  
+    if self._getLength() == 0:
           return None
     temp = []
-    for i in range(0, self.getLength()-1):
-      d = self.getDistance(self.pointSet[i], self.pointSet[i+1])
+    for i in range(0, self._getLength()-1):
+      d = self._getDistance(self.pointSet[i], self.pointSet[i+1])
       
       # skip duplicates e.g. points where no distance is covered 
-      if (d == ZERO_DIST) and (i+1 != self.getLength()):
+      if (d == ZERO_DIST) and (i+1 != self._getLength()):
         self.duplicatePoints += 1
         continue
 
@@ -107,7 +107,7 @@ class PointSet:
     self.pointSet = temp[:]
 
   # Check for timestamps which aren't consecutive
-  def removeTimeErrors(self):
+  def _removeTimeErrors(self):
     cur_low = 0
     temp = []
     for pt in self.pointSet:
@@ -123,17 +123,17 @@ class PointSet:
 
   # Remove outlying points
   def removeOutliers(self):
-    self.removeTimeErrors()
-    self.setDistances()
+    self._removeTimeErrors()
+    self._setDistances()
 
     # Calculate MAD
     med = median(self.distances)
-    ab_med_dev = self.getMAD() * CHEBYSHEV_CONST
+    ab_med_dev = self._getMAD() * CHEBYSHEV_CONST
     
     # Add starting point
     temp = []
     temp.append(self.pointSet[0])
-    for i in range(0, self.getLength()-1):
+    for i in range(0, self._getLength()-1):
       if ((med - ab_med_dev) <= self.pointSet[i].distance <= (med + ab_med_dev)):
         temp.append(self.pointSet[i+1])
       else:
@@ -168,6 +168,6 @@ class PointSet:
     print("Duplicate points:\t" + str(self.duplicatePoints))
     print("Timestamp errors:\t" + str(self.timestampErrors))
     print("Outliers:\t\t"       + str(self.outlierCount))
-    print("\nCurrent count:\t"  + str(self.getLength()) + "/227")
-    print("Erroneous points filtered: " + str(227-(self.getLength())))
+    print("\nCurrent count:\t"  + str(self._getLength()) + "/227")
+    print("Erroneous points filtered: " + str(227-(self._getLength())))
 
